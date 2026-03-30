@@ -17,6 +17,7 @@ export type Database = {
       responses: {
         Row: {
           archetype_code: string
+          archetype_url: string | null
           cap_letter: string
           cap_score: number
           created_at: string | null
@@ -58,6 +59,7 @@ export type Database = {
         }
         Insert: {
           archetype_code: string
+          archetype_url?: string | null
           cap_letter: string
           cap_score: number
           created_at?: string | null
@@ -99,6 +101,7 @@ export type Database = {
         }
         Update: {
           archetype_code?: string
+          archetype_url?: string | null
           cap_letter?: string
           cap_score?: number
           created_at?: string | null
