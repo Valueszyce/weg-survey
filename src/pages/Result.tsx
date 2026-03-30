@@ -49,9 +49,12 @@ const Result = () => {
       {/* Nav */}
       <nav className="no-print bg-card border-b">
         <div className="container max-w-5xl py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="Valueships" className="h-7" />
-          </Link>
+          <a
+            href="https://www.valueships.com"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" /> Valueships
+          </a>
         </div>
       </nav>
 
@@ -59,7 +62,7 @@ const Result = () => {
       <section className="no-print bg-card border-t-4 border-primary">
         <div className="container max-w-5xl py-10 md:py-14">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <img src={logo} alt="Valueships" className="h-7 mb-6" />
+            <img src={logo} alt="Valueships" className="h-16 md:h-20 mb-6" />
             <div className="flex items-center gap-3 mb-4">
               <span className="bg-primary/15 text-primary rounded-full px-3 py-1 text-xs font-bold">
                 {archetype.class}
