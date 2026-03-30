@@ -32,7 +32,7 @@ export default function Index() {
       <div className="bg-card border-t-4 border-primary">
         <div className="container max-w-3xl py-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <img src={logo} alt="Valueships" className="h-8 mb-6" />
+            <img src={logo} alt="Valueships" className="h-16 md:h-20 mb-6" />
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-bold mb-4">
               <ClipboardList className="w-3.5 h-3.5" />
               <span>Pricing Diagnostic</span>
@@ -51,6 +51,12 @@ export default function Index() {
                 {tag}
               </span>
             ))}
+          </div>
+
+          <div className="mt-6">
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Here's how EPR works: for each topic, you'll see a series of questions in which you have to select a 1–5 rating that best matches your current level of advancement (1 = basic, 5 = highly advanced). If you feel like you are between written steps, you can choose options in the middle of the two chosen — and add a note explaining your situation. There are no right answers — the goal is clarity, not perfection.
+            </p>
           </div>
         </div>
       </div>
