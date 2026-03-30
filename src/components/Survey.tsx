@@ -131,7 +131,7 @@ export default function Survey({ onComplete }: SurveyProps) {
             </span>
           )}
           {stepComplete && (
-            <span className="inline-flex items-center gap-1 text-xs text-green-600 font-medium">
+            <span className="inline-flex items-center gap-1 text-xs text-success font-medium">
               <CheckCircle2 className="w-3.5 h-3.5" /> All answered
             </span>
           )}
