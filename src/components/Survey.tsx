@@ -35,7 +35,6 @@ function LikertQuestion({
         {question.text}
       </p>
 
-      {/* 5-column layout: number button + label below each */}
       <div className="grid grid-cols-5 gap-2">
         {[1, 2, 3, 4, 5].map(n => {
           const anchorKey = ANCHORS[n]
@@ -47,29 +46,22 @@ function LikertQuestion({
               <button
                 type="button"
                 onClick={() => onChange(n)}
-                className={`w-full h-12 rounded-lg border-2 font-bold text-base transition-all ${
+                className={`w-full h-14 rounded-xl border-2 font-extrabold text-lg transition-all ${
                   isSelected
                     ? 'border-primary bg-primary text-primary-foreground shadow-md scale-105'
-                    : 'border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground'
+                    : 'border-border bg-card text-foreground hover:border-primary/50 hover:bg-primary/5'
                 }`}
               >
                 {n}
               </button>
-              {anchorText ? (
-                <p className="text-[10px] text-muted-foreground leading-tight text-center min-h-[2.5rem]">
-                  {anchorText}
-                </p>
-              ) : (
-                <p className="text-[10px] text-muted-foreground/50 leading-tight text-center italic min-h-[2.5rem]">
-                  between
-                </p>
-              )}
+              <p className="text-[10px] text-muted-foreground leading-tight text-center min-h-[2.5rem]">
+                {anchorText ?? 'between'}
+              </p>
             </div>
           )
         })}
       </div>
 
-      {/* Note input — shown when 2 or 4 is selected */}
       {(value === 2 || value === 4) && (
         <div className="pt-1 space-y-1">
           <label className="text-xs text-muted-foreground font-medium">
@@ -113,9 +105,10 @@ export default function Survey({ onComplete }: SurveyProps) {
 
   return (
     <div className="space-y-6">
-      {/* Progress */}
-      <div className="bg-card rounded-lg border p-5 space-y-3">
-        <div className="flex justify-between text-xs text-muted-foreground font-medium">
+
+      {/* Progress block */}
+      <div className="bg-card rounded-lg border p-4 space-y-3">
+        <div className="flex justify-between text-sm font-medium text-foreground">
           <span>{totalAnswered} of {totalQuestions} answered</span>
           <span>{progress}%</span>
         </div>
@@ -125,13 +118,15 @@ export default function Survey({ onComplete }: SurveyProps) {
             style={{ width: `${progress}%` }}
           />
         </div>
-        <div className="flex gap-2">
+        {/* Step indicators — horizontal scroll on mobile to prevent overflow */}
+        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
           {surveySteps.map((s, i) => (
-            <div key={i} className="flex-1 space-y-1">
+            <div key={i} className="flex-shrink-0" style={{ width: `${100 / surveySteps.length}%`, minWidth: '60px' }}>
               <div className={`h-1 rounded-full transition-colors ${
                 i < step ? 'bg-primary' : i === step ? 'bg-primary/50' : 'bg-border'
               }`} />
-              <p className="text-[10px] text-muted-foreground truncate">{s.title}</p>
+              <p className="text-[9px] text-muted-foreground truncate mt-1 hidden sm:block">{s.title}</p>
+              <p className="text-[9px] text-muted-foreground mt-1 sm:hidden">{i + 1}/{surveySteps.length}</p>
             </div>
           ))}
         </div>
@@ -144,13 +139,14 @@ export default function Survey({ onComplete }: SurveyProps) {
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
-          transition={{ duration: 0.25 }}
+          transition={{ duration: 0.2 }}
           className="space-y-4"
         >
-          <div className="mb-2">
-            <h2 className="text-lg font-bold text-foreground">{currentStep.title}</h2>
-            <p className="text-sm text-muted-foreground">{currentStep.subtitle}</p>
+          <div>
+            <h2 className="text-xl font-bold text-foreground">{currentStep.title}</h2>
+            <p className="text-sm text-muted-foreground mt-0.5">{currentStep.subtitle}</p>
           </div>
+
           {currentStep.questions.map((q, i) => (
             <LikertQuestion
               key={q.id}
@@ -166,11 +162,11 @@ export default function Survey({ onComplete }: SurveyProps) {
       </AnimatePresence>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex items-center justify-between pt-2 border-t border-border">
         {step > 0 ? (
           <button
             onClick={handleBack}
-            className="inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-primary transition-colors"
           >
             <ArrowLeft className="w-4 h-4" /> Back
           </button>
@@ -178,14 +174,13 @@ export default function Survey({ onComplete }: SurveyProps) {
           <div />
         )}
         <div className="flex items-center gap-3">
-          {!stepComplete && (
+          {stepComplete ? (
+            <span className="hidden sm:inline-flex items-center gap-1 text-xs font-medium text-green-600">
+              <CheckCircle2 className="w-3.5 h-3.5" /> All answered
+            </span>
+          ) : (
             <span className="text-xs text-muted-foreground">
               {currentStep.questions.length - answeredInStep} remaining
-            </span>
-          )}
-          {stepComplete && (
-            <span className="inline-flex items-center gap-1 text-xs font-medium" style={{ color: 'hsl(160 84% 39%)' }}>
-              <CheckCircle2 className="w-3.5 h-3.5" /> All answered
             </span>
           )}
           <button
