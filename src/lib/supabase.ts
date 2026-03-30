@@ -2,6 +2,7 @@ import { supabase } from '@/integrations/supabase/client'
 
 export async function saveResponse(data: {
   email: string
+  first_name: string
   archetype_code: string
   cap_score: number
   set_score: number
