@@ -29,24 +29,22 @@ function LikertQuestion({
   index: number
 }) {
   return (
-    <div className="bg-card rounded-lg border p-5 space-y-3">
-      <p className="text-sm font-semibold text-foreground leading-snug">
-        <span className="text-muted-foreground mr-1">{index + 1}.</span>
+    <div className="bg-card rounded-xl border p-6 space-y-6">
+      <p className="text-base font-semibold text-foreground leading-snug">
+        <span className="text-primary font-bold mr-2">{index + 1}.</span>
         {question.text}
       </p>
-
-      <div className="grid grid-cols-5 gap-2">
+      <div className="flex gap-3">
         {[1, 2, 3, 4, 5].map(n => {
           const anchorKey = ANCHORS[n]
           const anchorText = anchorKey ? question[anchorKey] : null
           const isSelected = value === n
-
           return (
-            <div key={n} className="flex flex-col items-center gap-1">
+            <div key={n} className="flex-1 flex flex-col items-center gap-3">
               <button
                 type="button"
                 onClick={() => onChange(n)}
-                className={`w-full h-14 rounded-xl border-2 font-extrabold text-lg transition-all ${
+                className={`w-full h-14 rounded-xl border-2 font-extrabold text-xl transition-all ${
                   isSelected
                     ? 'border-primary bg-primary text-primary-foreground shadow-md scale-105'
                     : 'border-border bg-card text-foreground hover:border-primary/50 hover:bg-primary/5'
@@ -54,17 +52,20 @@ function LikertQuestion({
               >
                 {n}
               </button>
-              <p className="text-[10px] text-muted-foreground leading-tight text-center min-h-[2.5rem]">
+              <p className={`text-xs leading-relaxed text-center w-full ${
+                anchorText
+                  ? 'text-foreground font-medium'
+                  : 'text-muted-foreground italic'
+              }`}>
                 {anchorText ?? 'between'}
               </p>
             </div>
           )
         })}
       </div>
-
       {(value === 2 || value === 4) && (
-        <div className="pt-1 space-y-1">
-          <label className="text-xs text-muted-foreground font-medium">
+        <div>
+          <label className="text-xs font-semibold text-foreground block mb-2">
             Optional: describe your situation
           </label>
           <textarea
