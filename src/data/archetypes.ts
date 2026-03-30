@@ -124,3 +124,38 @@ export const improvements: Record<string, Record<string, string[]>> = {
     ],
   },
 };
+
+const SECTION_MAP: Record<string, 'capabilities' | 'setting' | 'execution'> = {
+  Q2:'setting',  Q3:'setting',  Q4:'setting',  Q5:'setting',  Q6:'setting',
+  Q7:'capabilities', Q8:'setting', Q9:'setting', Q10:'execution',
+  Q11:'setting', Q12:'execution', Q13:'setting', Q14:'setting',
+  Q15:'execution', Q16:'execution', Q17:'execution', Q18:'setting',
+  Q19:'setting', Q20:'execution', Q21:'capabilities', Q22:'capabilities',
+  Q23:'execution', Q24:'execution', Q25:'execution', Q26:'capabilities',
+  Q27:'capabilities', Q28:'capabilities', Q29:'capabilities',
+}
+
+const MAX_SCORES = { capabilities: 35, setting: 60, execution: 45 }
+
+export function calculateScores(answers: Record<string, number>) {
+  let capRaw = 0, setRaw = 0, exeRaw = 0
+  for (const [q, score] of Object.entries(answers)) {
+    const s = SECTION_MAP[q]
+    if (s === 'capabilities') capRaw += score
+    else if (s === 'setting') setRaw += score
+    else if (s === 'execution') exeRaw += score
+  }
+  const capNorm = Math.round((capRaw / MAX_SCORES.capabilities) * 100)
+  const setNorm  = Math.round((setRaw  / MAX_SCORES.setting)      * 100)
+  const exeNorm  = Math.round((exeRaw  / MAX_SCORES.execution)    * 100)
+  const toLetter = (n: number) => n <= 40 ? 'L' : n <= 70 ? 'M' : 'H'
+  const capLetter = toLetter(capNorm)
+  const setLetter  = toLetter(setNorm)
+  const exeLetter  = toLetter(exeNorm)
+  return {
+    capRaw, setRaw, exeRaw,
+    capNorm, setNorm, exeNorm,
+    capLetter, setLetter, exeLetter,
+    code: `${capLetter}${setLetter}${exeLetter}`,
+  }
+}
