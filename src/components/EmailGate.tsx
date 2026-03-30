@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Mail, ArrowRight, Lock, Loader2 } from 'lucide-react'
+import { Mail, ArrowRight, Lock, Loader2, User } from 'lucide-react'
 import { saveResponse } from '@/lib/supabase'
 
 interface EmailGateProps {
@@ -16,9 +16,10 @@ export default function EmailGate({
   capLetter, setLetter, exeLetter, rawScores, onSuccess,
 }: EmailGateProps) {
   const [email, setEmail] = useState('')
+  const [firstName, setFirstName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && firstName.trim().length > 0
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -26,7 +27,8 @@ export default function EmailGate({
     setLoading(true); setError('')
     try {
       await saveResponse({
-        email, archetype_code: archetypeCode,
+        email, first_name: firstName.trim(),
+        archetype_code: archetypeCode,
         cap_score: capScore, set_score: setScore, exe_score: exeScore,
         cap_letter: capLetter, set_letter: setLetter, exe_letter: exeLetter,
         raw_scores: rawScores,
@@ -53,7 +55,7 @@ export default function EmailGate({
         <h2 className="text-xl font-extrabold text-foreground mb-2">Your results are ready</h2>
 
         <p className="text-sm text-muted-foreground mb-6">
-          Enter your work email to unlock your pricing archetype, maturity scores, and a tailored improvement plan.
+          Enter your details to unlock your pricing archetype, maturity scores, and a tailored improvement plan.
         </p>
 
         <div className="mb-6">
@@ -65,13 +67,24 @@ export default function EmailGate({
 
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="First name"
+              value={firstName}
+              onChange={e => setFirstName(e.target.value)}
+              autoFocus
+              className="w-full pl-10 pr-4 py-3 rounded-lg border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
+            />
+          </div>
+
+          <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="email"
               placeholder="you@email.com"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              autoFocus
               className="w-full pl-10 pr-4 py-3 rounded-lg border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
             />
           </div>

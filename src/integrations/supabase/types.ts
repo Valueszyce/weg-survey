@@ -24,6 +24,7 @@ export type Database = {
           email: string
           exe_letter: string
           exe_score: number
+          first_name: string | null
           id: string
           q10: number | null
           q11: number | null
@@ -66,6 +67,7 @@ export type Database = {
           email: string
           exe_letter: string
           exe_score: number
+          first_name?: string | null
           id?: string
           q10?: number | null
           q11?: number | null
@@ -108,6 +110,7 @@ export type Database = {
           email?: string
           exe_letter?: string
           exe_score?: number
+          first_name?: string | null
           id?: string
           q10?: number | null
           q11?: number | null

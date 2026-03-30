@@ -2,6 +2,7 @@ import { supabase } from '@/integrations/supabase/client'
 
 export async function saveResponse(data: {
   email: string
+  first_name: string
   archetype_code: string
   cap_score: number
   set_score: number
@@ -13,6 +14,7 @@ export async function saveResponse(data: {
 }) {
   const { error } = await supabase.from('responses').insert([{
     email: data.email,
+    first_name: data.first_name,
     archetype_code: data.archetype_code,
     cap_score: data.cap_score,
     set_score: data.set_score,
