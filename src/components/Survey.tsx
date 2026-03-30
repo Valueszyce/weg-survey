@@ -28,41 +28,71 @@ function LikertQuestion({
   onNote: (n: string) => void
   index: number
 }) {
+  const selectedAnchor = value === 1
+    ? question.anchor1
+    : value === 2
+    ? null
+    : value === 3
+    ? question.anchor3
+    : value === 4
+    ? null
+    : value === 5
+    ? question.anchor5
+    : null
   return (
-    <div className="bg-card rounded-xl border p-6 space-y-6">
+    <div className="bg-card rounded-xl border p-5 md:p-6 space-y-5">
       <p className="text-base font-semibold text-foreground leading-snug">
         <span className="text-primary font-bold mr-2">{index + 1}.</span>
         {question.text}
       </p>
-      <div className="flex gap-3">
+      {/* Buttons row — simple on all screens */}
+      <div className="flex gap-2">
         {[1, 2, 3, 4, 5].map(n => {
-          const anchorKey = ANCHORS[n]
-          const anchorText = anchorKey ? question[anchorKey] : null
           const isSelected = value === n
           return (
-            <div key={n} className="flex-1 flex flex-col items-center gap-3">
-              <button
-                type="button"
-                onClick={() => onChange(n)}
-                className={`w-full h-14 rounded-xl border-2 font-extrabold text-xl transition-all ${
-                  isSelected
-                    ? 'border-primary bg-primary text-primary-foreground shadow-md scale-105'
-                    : 'border-border bg-card text-foreground hover:border-primary/50 hover:bg-primary/5'
-                }`}
-              >
-                {n}
-              </button>
-              <p className={`text-xs leading-relaxed text-center w-full ${
-                anchorText
-                  ? 'text-foreground font-medium'
-                  : 'text-muted-foreground italic'
-              }`}>
-                {anchorText ?? 'between'}
-              </p>
-            </div>
+            <button
+              key={n}
+              type="button"
+              onClick={() => onChange(n)}
+              className={`flex-1 h-14 rounded-xl border-2 font-extrabold text-xl transition-all ${
+                isSelected
+                  ? 'border-primary bg-primary text-primary-foreground shadow-md scale-105'
+                  : 'border-border bg-card text-foreground hover:border-primary/50 hover:bg-primary/5'
+              }`}
+            >
+              {n}
+            </button>
           )
         })}
       </div>
+      {/* Anchor labels — 3-column row, desktop only */}
+      <div className="hidden md:flex justify-between text-xs text-foreground font-medium gap-4">
+        <span className="w-1/3 leading-relaxed">{question.anchor1}</span>
+        <span className="w-1/3 text-center leading-relaxed text-muted-foreground italic">{question.anchor3}</span>
+        <span className="w-1/3 text-right leading-relaxed">{question.anchor5}</span>
+      </div>
+      {/* Mobile: show description of selected answer below buttons */}
+      <div className="md:hidden">
+        {value != null && (
+          <p className="text-sm text-foreground font-medium leading-relaxed bg-primary/5 border border-primary/20 rounded-lg px-4 py-3">
+            {value === 1 || value === 5
+              ? selectedAnchor
+              : value === 3
+              ? question.anchor3
+              : value === 2
+              ? <span><span className="italic text-muted-foreground">Between: </span>{question.anchor1} → {question.anchor3}</span>
+              : <span><span className="italic text-muted-foreground">Between: </span>{question.anchor3} → {question.anchor5}</span>
+            }
+          </p>
+        )}
+        {value == null && (
+          <div className="flex justify-between text-[10px] text-muted-foreground px-1">
+            <span>1 = {question.anchor1.split(' ').slice(0, 4).join(' ')}…</span>
+            <span>5 = {question.anchor5.split(' ').slice(0, 4).join(' ')}…</span>
+          </div>
+        )}
+      </div>
+      {/* Note input for 2 and 4 */}
       {(value === 2 || value === 4) && (
         <div>
           <label className="text-xs font-semibold text-foreground block mb-2">
