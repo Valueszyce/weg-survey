@@ -3,7 +3,12 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? ''
 const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? ''
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+function getClient() {
+  if (!supabaseUrl || !supabaseKey) return null
+  return createClient(supabaseUrl, supabaseKey)
+}
+
+const supabase = getClient()
 
 export async function saveResponse(data: {
   email: string
@@ -16,8 +21,8 @@ export async function saveResponse(data: {
   exe_letter: string
   raw_scores: Record<string, number>
 }) {
-  if (!supabaseUrl || !supabaseKey) {
-    console.warn('Supabase env vars not set — skipping save')
+  if (!supabase) {
+    console.warn('Supabase not configured — skipping save')
     return
   }
   const { error } = await supabase.from('responses').insert([data])
