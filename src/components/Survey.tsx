@@ -7,11 +7,26 @@ interface SurveyProps {
   onComplete: (answers: Record<string, number>) => void
 }
 
+const ANCHORS: Record<number, keyof Question | null> = {
+  1: 'anchor1',
+  3: 'anchor3',
+  5: 'anchor5',
+}
+
 function LikertQuestion({
-  question, value, onChange, index,
+  question,
+  value,
+  note,
+  onChange,
+  onNote,
+  index,
 }: {
-  question: Question; value: number | undefined
-  onChange: (v: number) => void; index: number
+  question: Question
+  value: number | undefined
+  note: string
+  onChange: (v: number) => void
+  onNote: (n: string) => void
+  index: number
 }) {
   return (
     <div className="bg-card rounded-lg border p-5 space-y-3">
@@ -20,28 +35,55 @@ function LikertQuestion({
         {question.text}
       </p>
 
-      <div className="flex gap-2">
-        {[1,2,3,4,5].map(n => (
-          <button
-            key={n}
-            type="button"
-            onClick={() => onChange(n)}
-            className={`flex-1 h-11 rounded-lg border-2 font-bold text-sm transition-all ${
-              value === n
-                ? 'border-primary bg-primary text-primary-foreground shadow-md scale-105'
-                : 'border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground'
-            }`}
-          >
-            {n}
-          </button>
-        ))}
+      {/* 5-column layout: number button + label below each */}
+      <div className="grid grid-cols-5 gap-2">
+        {[1, 2, 3, 4, 5].map(n => {
+          const anchorKey = ANCHORS[n]
+          const anchorText = anchorKey ? question[anchorKey] : null
+          const isSelected = value === n
+
+          return (
+            <div key={n} className="flex flex-col items-center gap-1">
+              <button
+                type="button"
+                onClick={() => onChange(n)}
+                className={`w-full h-12 rounded-lg border-2 font-bold text-base transition-all ${
+                  isSelected
+                    ? 'border-primary bg-primary text-primary-foreground shadow-md scale-105'
+                    : 'border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground'
+                }`}
+              >
+                {n}
+              </button>
+              {anchorText ? (
+                <p className="text-[10px] text-muted-foreground leading-tight text-center min-h-[2.5rem]">
+                  {anchorText}
+                </p>
+              ) : (
+                <p className="text-[10px] text-muted-foreground/50 leading-tight text-center italic min-h-[2.5rem]">
+                  between
+                </p>
+              )}
+            </div>
+          )
+        })}
       </div>
 
-      <div className="flex justify-between text-[11px] text-muted-foreground leading-tight">
-        <span className="max-w-[35%]">{question.anchor1}</span>
-        <span className="max-w-[25%] text-center">{question.anchor3}</span>
-        <span className="max-w-[35%] text-right">{question.anchor5}</span>
-      </div>
+      {/* Note input — shown when 2 or 4 is selected */}
+      {(value === 2 || value === 4) && (
+        <div className="pt-1 space-y-1">
+          <label className="text-xs text-muted-foreground font-medium">
+            Optional: describe your situation
+          </label>
+          <textarea
+            value={note}
+            onChange={e => onNote(e.target.value)}
+            placeholder="What best describes where you are between these two options?"
+            rows={2}
+            className="w-full text-sm rounded-lg border bg-background px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+          />
+        </div>
+      )}
     </div>
   )
 }
@@ -49,6 +91,7 @@ function LikertQuestion({
 export default function Survey({ onComplete }: SurveyProps) {
   const [step, setStep] = useState(0)
   const [answers, setAnswers] = useState<Record<string, number>>({})
+  const [notes, setNotes] = useState<Record<string, string>>({})
 
   const currentStep = surveySteps[step]
   const answeredInStep = currentStep.questions.filter(q => answers[q.id] !== undefined).length
@@ -70,6 +113,7 @@ export default function Survey({ onComplete }: SurveyProps) {
 
   return (
     <div className="space-y-6">
+      {/* Progress */}
       <div className="bg-card rounded-lg border p-5 space-y-3">
         <div className="flex justify-between text-xs text-muted-foreground font-medium">
           <span>{totalAnswered} of {totalQuestions} answered</span>
@@ -84,13 +128,16 @@ export default function Survey({ onComplete }: SurveyProps) {
         <div className="flex gap-2">
           {surveySteps.map((s, i) => (
             <div key={i} className="flex-1 space-y-1">
-              <div className={`h-1 rounded-full ${i <= step ? 'bg-primary' : 'bg-border'}`} />
+              <div className={`h-1 rounded-full transition-colors ${
+                i < step ? 'bg-primary' : i === step ? 'bg-primary/50' : 'bg-border'
+              }`} />
               <p className="text-[10px] text-muted-foreground truncate">{s.title}</p>
             </div>
           ))}
         </div>
       </div>
 
+      {/* Questions */}
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
@@ -109,21 +156,27 @@ export default function Survey({ onComplete }: SurveyProps) {
               key={q.id}
               question={q}
               value={answers[q.id]}
+              note={notes[q.id] ?? ''}
               onChange={v => setAnswers(prev => ({ ...prev, [q.id]: v }))}
+              onNote={n => setNotes(prev => ({ ...prev, [q.id]: n }))}
               index={questionOffset + i}
             />
           ))}
         </motion.div>
       </AnimatePresence>
 
+      {/* Navigation */}
       <div className="flex items-center justify-between pt-2">
-        <button
-          onClick={handleBack}
-          disabled={step === 0}
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" /> Back
-        </button>
+        {step > 0 ? (
+          <button
+            onClick={handleBack}
+            className="inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back
+          </button>
+        ) : (
+          <div />
+        )}
         <div className="flex items-center gap-3">
           {!stepComplete && (
             <span className="text-xs text-muted-foreground">
@@ -131,7 +184,7 @@ export default function Survey({ onComplete }: SurveyProps) {
             </span>
           )}
           {stepComplete && (
-            <span className="inline-flex items-center gap-1 text-xs text-success font-medium">
+            <span className="inline-flex items-center gap-1 text-xs font-medium" style={{ color: 'hsl(160 84% 39%)' }}>
               <CheckCircle2 className="w-3.5 h-3.5" /> All answered
             </span>
           )}

@@ -52,6 +52,12 @@ export default function Index() {
               </span>
             ))}
           </div>
+
+          <div className="mt-6">
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Here's how EPR works: for each topic, you'll see a series of questions in which you have to select a 1–5 rating that best matches your current level of advancement (1 = basic, 5 = highly advanced). If you feel like you are between written steps, you can choose options in the middle of the two chosen — and add a note explaining your situation. There are no right answers — the goal is clarity, not perfection.
+            </p>
+          </div>
         </div>
       </div>
 
