@@ -32,7 +32,7 @@ export default function Index() {
       <div className="bg-card border-t-4 border-primary">
         <div className="container max-w-3xl py-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <img src={logo} alt="Valueships" className="h-8 mb-6" />
+            <img src={logo} alt="Valueships" className="h-16 md:h-20 mb-6" />
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-bold mb-4">
               <ClipboardList className="w-3.5 h-3.5" />
               <span>Pricing Diagnostic</span>
