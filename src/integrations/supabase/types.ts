@@ -24,6 +24,34 @@ export type Database = {
           exe_letter: string
           exe_score: number
           id: string
+          q10: number | null
+          q11: number | null
+          q12: number | null
+          q13: number | null
+          q14: number | null
+          q15: number | null
+          q16: number | null
+          q17: number | null
+          q18: number | null
+          q19: number | null
+          q2: number | null
+          q20: number | null
+          q21: number | null
+          q22: number | null
+          q23: number | null
+          q24: number | null
+          q25: number | null
+          q26: number | null
+          q27: number | null
+          q28: number | null
+          q29: number | null
+          q3: number | null
+          q4: number | null
+          q5: number | null
+          q6: number | null
+          q7: number | null
+          q8: number | null
+          q9: number | null
           raw_scores: Json | null
           set_letter: string
           set_score: number
@@ -37,6 +65,34 @@ export type Database = {
           exe_letter: string
           exe_score: number
           id?: string
+          q10?: number | null
+          q11?: number | null
+          q12?: number | null
+          q13?: number | null
+          q14?: number | null
+          q15?: number | null
+          q16?: number | null
+          q17?: number | null
+          q18?: number | null
+          q19?: number | null
+          q2?: number | null
+          q20?: number | null
+          q21?: number | null
+          q22?: number | null
+          q23?: number | null
+          q24?: number | null
+          q25?: number | null
+          q26?: number | null
+          q27?: number | null
+          q28?: number | null
+          q29?: number | null
+          q3?: number | null
+          q4?: number | null
+          q5?: number | null
+          q6?: number | null
+          q7?: number | null
+          q8?: number | null
+          q9?: number | null
           raw_scores?: Json | null
           set_letter: string
           set_score: number
@@ -50,6 +106,34 @@ export type Database = {
           exe_letter?: string
           exe_score?: number
           id?: string
+          q10?: number | null
+          q11?: number | null
+          q12?: number | null
+          q13?: number | null
+          q14?: number | null
+          q15?: number | null
+          q16?: number | null
+          q17?: number | null
+          q18?: number | null
+          q19?: number | null
+          q2?: number | null
+          q20?: number | null
+          q21?: number | null
+          q22?: number | null
+          q23?: number | null
+          q24?: number | null
+          q25?: number | null
+          q26?: number | null
+          q27?: number | null
+          q28?: number | null
+          q29?: number | null
+          q3?: number | null
+          q4?: number | null
+          q5?: number | null
+          q6?: number | null
+          q7?: number | null
+          q8?: number | null
+          q9?: number | null
           raw_scores?: Json | null
           set_letter?: string
           set_score?: number
