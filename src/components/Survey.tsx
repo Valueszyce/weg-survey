@@ -55,7 +55,7 @@ function LikertQuestion({
                 }`}>
                   {anchorText}
                 </p>
-              )}
+              ) : null}
             </div>
           )
         })}
