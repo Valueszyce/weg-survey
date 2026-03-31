@@ -46,7 +46,7 @@ export default function Index() {
             </p>
           </motion.div>
           <div className="flex flex-wrap gap-2 mt-6">
-            {['28 questions', '~15 minutes', 'Instant results', 'Free'].map(tag => (
+            {['9 questions', '~5 minutes', 'Instant results', 'Free'].map(tag => (
               <span key={tag} className="bg-secondary text-foreground rounded-full px-3 py-1 text-xs font-medium">
                 {tag}
               </span>
