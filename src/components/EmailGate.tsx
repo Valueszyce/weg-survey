@@ -5,6 +5,8 @@ import { saveResponse } from '@/lib/supabase'
 
 interface EmailGateProps {
   archetypeCode: string
+  archetypeName: string
+  archetypeDescription: string
   capScore: number; setScore: number; exeScore: number
   capLetter: string; setLetter: string; exeLetter: string
   rawScores: Record<string, number>
@@ -12,7 +14,8 @@ interface EmailGateProps {
 }
 
 export default function EmailGate({
-  archetypeCode, capScore, setScore, exeScore,
+  archetypeCode, archetypeName, archetypeDescription,
+  capScore, setScore, exeScore,
   capLetter, setLetter, exeLetter, rawScores, onSuccess,
 }: EmailGateProps) {
   const [email, setEmail] = useState('')
@@ -63,6 +66,8 @@ export default function EmailGate({
           <p className="font-mono text-3xl font-extrabold tracking-widest text-foreground">
             {archetypeCode}
           </p>
+          <p className="text-sm font-bold text-foreground mt-2">{archetypeName}</p>
+          <p className="text-xs text-muted-foreground mt-1">{archetypeDescription}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">

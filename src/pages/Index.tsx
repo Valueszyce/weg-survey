@@ -5,7 +5,7 @@ import { ClipboardList } from 'lucide-react'
 import logo from '@/assets/valueships-logo.png'
 import Survey from '@/components/Survey'
 import EmailGate from '@/components/EmailGate'
-import { calculateScores } from '@/data/archetypes'
+import { calculateScores, getArchetype } from '@/data/archetypes'
 
 type Stage = 'survey' | 'gate' | 'done'
 
@@ -73,6 +73,8 @@ export default function Index() {
       {stage === 'gate' && scores && (
         <EmailGate
           archetypeCode={scores.code}
+          archetypeName={getArchetype(scores.code)?.name ?? ''}
+          archetypeDescription={getArchetype(scores.code)?.description ?? ''}
           capScore={scores.capNorm}
           setScore={scores.setNorm}
           exeScore={scores.exeNorm}
