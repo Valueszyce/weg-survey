@@ -5,6 +5,8 @@ import { saveResponse } from '@/lib/supabase'
 
 interface EmailGateProps {
   archetypeCode: string
+  archetypeName: string
+  archetypeDescription: string
   capScore: number; setScore: number; exeScore: number
   capLetter: string; setLetter: string; exeLetter: string
   rawScores: Record<string, number>
