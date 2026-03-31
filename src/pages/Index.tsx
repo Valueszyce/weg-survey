@@ -73,6 +73,8 @@ export default function Index() {
       {stage === 'gate' && scores && (
         <EmailGate
           archetypeCode={scores.code}
+          archetypeName={getArchetype(scores.code)?.name ?? ''}
+          archetypeDescription={getArchetype(scores.code)?.description ?? ''}
           capScore={scores.capNorm}
           setScore={scores.setNorm}
           exeScore={scores.exeNorm}

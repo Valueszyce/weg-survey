@@ -66,6 +66,8 @@ export default function EmailGate({
           <p className="font-mono text-3xl font-extrabold tracking-widest text-foreground">
             {archetypeCode}
           </p>
+          <p className="text-sm font-bold text-foreground mt-2">{archetypeName}</p>
+          <p className="text-xs text-muted-foreground mt-1">{archetypeDescription}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
