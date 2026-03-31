@@ -41,7 +41,7 @@ export default function Index() {
               Discover your pricing archetype
             </h1>
             <p className="text-muted-foreground text-sm max-w-xl">
-              28 questions. 15 minutes. A clear picture of where your professional services firm
+              9 questions. 5 minutes. A clear picture of where your professional services firm
               is losing margin — and what to fix first.
             </p>
           </motion.div>
