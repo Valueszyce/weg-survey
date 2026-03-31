@@ -14,7 +14,8 @@ interface EmailGateProps {
 }
 
 export default function EmailGate({
-  archetypeCode, capScore, setScore, exeScore,
+  archetypeCode, archetypeName, archetypeDescription,
+  capScore, setScore, exeScore,
   capLetter, setLetter, exeLetter, rawScores, onSuccess,
 }: EmailGateProps) {
   const [email, setEmail] = useState('')
