@@ -49,13 +49,9 @@ function LikertQuestion({
               >
                 {n}
               </button>
-              {anchorText ? (
-                <p className="text-[11px] leading-tight text-muted-foreground text-center px-0.5">
+              {anchorText && (
+                <p className="text-[9px] font-medium text-foreground leading-tight text-center w-full">
                   {anchorText}
-                </p>
-              ) : (
-                <p className="text-[11px] leading-tight text-muted-foreground/50 text-center italic">
-                  between
                 </p>
               )}
             </div>
