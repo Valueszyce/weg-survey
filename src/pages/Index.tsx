@@ -41,12 +41,12 @@ export default function Index() {
               Discover your pricing archetype
             </h1>
             <p className="text-muted-foreground text-sm max-w-xl">
-              28 questions. 15 minutes. A clear picture of where your professional services firm
+              9 questions. 5 minutes. A clear picture of where your professional services firm
               is losing margin — and what to fix first.
             </p>
           </motion.div>
           <div className="flex flex-wrap gap-2 mt-6">
-            {['28 questions', '~15 minutes', 'Instant results', 'Free'].map(tag => (
+            {['9 questions', '~5 minutes', 'Instant results', 'Free'].map(tag => (
               <span key={tag} className="bg-secondary text-foreground rounded-full px-3 py-1 text-xs font-medium">
                 {tag}
               </span>
@@ -55,7 +55,7 @@ export default function Index() {
 
           <div className="mt-6">
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Here's how EPR works: for each topic, you'll see a series of questions in which you have to select a 1–5 rating that best matches your current level of advancement (1 = basic, 5 = highly advanced). If you feel like you are between written steps, you can choose options in the middle of the two chosen — and add a note explaining your situation. There are no right answers — the goal is clarity, not perfection.
+              <span className="font-semibold">Here's how it works:</span> for each question, select a 1–5 rating that best matches your current situation (1 = basic, 5 = highly advanced). If you're between two answers, pick the middle number. There are no right answers — the goal is an honest picture of where you are today.
             </p>
           </div>
         </div>

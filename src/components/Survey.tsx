@@ -7,19 +7,8 @@ interface SurveyProps {
   onComplete: (answers: Record<string, number>) => void
 }
 
-const ANCHORS: Record<number, keyof Question | null> = {
-  1: 'anchor1',
-  3: 'anchor3',
-  5: 'anchor5',
-}
-
 function LikertQuestion({
-  question,
-  value,
-  note,
-  onChange,
-  onNote,
-  index,
+  question, value, note, onChange, onNote, index,
 }: {
   question: Question
   value: number | undefined
@@ -28,71 +17,53 @@ function LikertQuestion({
   onNote: (n: string) => void
   index: number
 }) {
-  const selectedAnchor = value === 1
-    ? question.anchor1
-    : value === 2
-    ? null
-    : value === 3
-    ? question.anchor3
-    : value === 4
-    ? null
-    : value === 5
-    ? question.anchor5
-    : null
+  const anchors: Record<number, string | undefined> = {
+    1: question.anchor1,
+    3: question.anchor3,
+    5: question.anchor5,
+  }
+
   return (
-    <div className="bg-card rounded-xl border p-5 md:p-6 space-y-5">
+    <div className="bg-card rounded-xl border p-6 space-y-6">
+
       <p className="text-base font-semibold text-foreground leading-snug">
         <span className="text-primary font-bold mr-2">{index + 1}.</span>
         {question.text}
       </p>
-      {/* Buttons row — simple on all screens */}
-      <div className="flex gap-2">
+
+      {/* Buttons + labels — always visible on all screen sizes */}
+      <div className="grid grid-cols-5 gap-2">
         {[1, 2, 3, 4, 5].map(n => {
           const isSelected = value === n
+          const anchorText = anchors[n]
           return (
-            <button
-              key={n}
-              type="button"
-              onClick={() => onChange(n)}
-              className={`flex-1 h-14 rounded-xl border-2 font-extrabold text-xl transition-all ${
-                isSelected
-                  ? 'border-primary bg-primary text-primary-foreground shadow-md scale-105'
-                  : 'border-border bg-card text-foreground hover:border-primary/50 hover:bg-primary/5'
-              }`}
-            >
-              {n}
-            </button>
+            <div key={n} className="flex flex-col items-center gap-2">
+              <button
+                type="button"
+                onClick={() => onChange(n)}
+                className={`w-full h-13 rounded-xl border-2 font-extrabold text-lg transition-all py-3 ${
+                  isSelected
+                    ? 'border-primary bg-primary text-primary-foreground shadow-md scale-105'
+                    : 'border-border bg-card text-foreground hover:border-primary/50 hover:bg-primary/5'
+                }`}
+              >
+                {n}
+              </button>
+              {anchorText ? (
+                <p className="text-[11px] leading-tight text-muted-foreground text-center px-0.5">
+                  {anchorText}
+                </p>
+              ) : (
+                <p className="text-[11px] leading-tight text-muted-foreground/50 text-center italic">
+                  between
+                </p>
+              )}
+            </div>
           )
         })}
       </div>
-      {/* Anchor labels — 3-column row, desktop only */}
-      <div className="hidden md:flex justify-between text-xs text-foreground font-medium gap-4">
-        <span className="w-1/3 leading-relaxed">{question.anchor1}</span>
-        <span className="w-1/3 text-center leading-relaxed text-muted-foreground italic">{question.anchor3}</span>
-        <span className="w-1/3 text-right leading-relaxed">{question.anchor5}</span>
-      </div>
-      {/* Mobile: show description of selected answer below buttons */}
-      <div className="md:hidden">
-        {value != null && (
-          <p className="text-sm text-foreground font-medium leading-relaxed bg-primary/5 border border-primary/20 rounded-lg px-4 py-3">
-            {value === 1 || value === 5
-              ? selectedAnchor
-              : value === 3
-              ? question.anchor3
-              : value === 2
-              ? <span><span className="italic text-muted-foreground">Between: </span>{question.anchor1} → {question.anchor3}</span>
-              : <span><span className="italic text-muted-foreground">Between: </span>{question.anchor3} → {question.anchor5}</span>
-            }
-          </p>
-        )}
-        {value == null && (
-          <div className="flex justify-between text-[10px] text-muted-foreground px-1">
-            <span>1 = {question.anchor1.split(' ').slice(0, 4).join(' ')}…</span>
-            <span>5 = {question.anchor5.split(' ').slice(0, 4).join(' ')}…</span>
-          </div>
-        )}
-      </div>
-      {/* Note input for 2 and 4 */}
+
+      {/* Optional note for scores 2 and 4 */}
       {(value === 2 || value === 4) && (
         <div>
           <label className="text-xs font-semibold text-foreground block mb-2">
@@ -137,7 +108,7 @@ export default function Survey({ onComplete }: SurveyProps) {
   return (
     <div className="space-y-6">
 
-      {/* Progress block */}
+      {/* Progress */}
       <div className="bg-card rounded-lg border p-4 space-y-3">
         <div className="flex justify-between text-sm font-medium text-foreground">
           <span>{totalAnswered} of {totalQuestions} answered</span>
@@ -149,15 +120,15 @@ export default function Survey({ onComplete }: SurveyProps) {
             style={{ width: `${progress}%` }}
           />
         </div>
-        {/* Step indicators — horizontal scroll on mobile to prevent overflow */}
-        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
+        <div className="flex gap-2">
           {surveySteps.map((s, i) => (
-            <div key={i} className="flex-shrink-0" style={{ width: `${100 / surveySteps.length}%`, minWidth: '60px' }}>
+            <div key={i} className="flex-1">
               <div className={`h-1 rounded-full transition-colors ${
                 i < step ? 'bg-primary' : i === step ? 'bg-primary/50' : 'bg-border'
               }`} />
-              <p className="text-[9px] text-muted-foreground truncate mt-1 hidden sm:block">{s.title}</p>
-              <p className="text-[9px] text-muted-foreground mt-1 sm:hidden">{i + 1}/{surveySteps.length}</p>
+              <p className={`text-[10px] mt-1 truncate ${
+                i === step ? 'text-foreground font-semibold' : 'text-muted-foreground'
+              }`}>{s.title}</p>
             </div>
           ))}
         </div>
@@ -177,7 +148,6 @@ export default function Survey({ onComplete }: SurveyProps) {
             <h2 className="text-xl font-bold text-foreground">{currentStep.title}</h2>
             <p className="text-sm text-muted-foreground mt-0.5">{currentStep.subtitle}</p>
           </div>
-
           {currentStep.questions.map((q, i) => (
             <LikertQuestion
               key={q.id}
@@ -206,7 +176,7 @@ export default function Survey({ onComplete }: SurveyProps) {
         )}
         <div className="flex items-center gap-3">
           {stepComplete ? (
-            <span className="hidden sm:inline-flex items-center gap-1 text-xs font-medium text-green-600">
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600">
               <CheckCircle2 className="w-3.5 h-3.5" /> All answered
             </span>
           ) : (
