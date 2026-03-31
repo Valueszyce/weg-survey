@@ -50,7 +50,7 @@ function LikertQuestion({
                 {n}
               </button>
               {anchorText && (
-                <p className="text-[9px] font-medium text-foreground leading-tight text-center w-full">
+                <p className="text-[8px] font-medium text-foreground leading-tight text-center w-full">
                   {anchorText}
                 </p>
               )}
