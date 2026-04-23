@@ -51,12 +51,16 @@ export default function Index() {
               <img src={partnerLogo} alt="Warsaw Equity Group" className="h-12 md:h-14" />
             </div>
 
-            <h1 className="text-2xl md:text-3xl font-extrabold text-foreground mb-3">
+            <h1 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4">
               Pricing Strategy for Scaleups
             </h1>
 
-            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-              Pressure-test your pricing as you scale from early traction to repeatable growth. Take the assessment to diagnose your pricing strengths and gaps, then get a practical set of next steps based on a proven pricing framework, brought for all CEE Growth Platform members.
+            <p className="text-foreground text-base leading-relaxed mb-3">
+              <strong>Pressure-test your pricing</strong> as you scale from early traction to repeatable growth.
+            </p>
+
+            <p className="text-foreground text-base leading-relaxed mb-6">
+              Take the assessment to diagnose your <strong>pricing strengths and gaps</strong>, then get a <strong>practical set of next steps</strong> based on a proven pricing framework — brought to you for all <strong>CEE Growth Platform members</strong>.
             </p>
 
             <div className="bg-accent/30 rounded-lg p-5 mb-6">
