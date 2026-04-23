@@ -30,7 +30,7 @@ export async function saveResponse(data: {
     set_letter: data.set_letter,
     exe_letter: data.exe_letter,
     raw_scores: data.raw_scores,
-    archetype_url: `https://weg-survey.lovable.app/result/${data.archetype_code}?type=${data.company_type}`,
+    archetype_url: `https://weg-pricing-survey.lovable.app/result/${data.archetype_code}?type=${data.company_type}`,
     q2:  data.raw_scores['Q2']  ?? null,
     q3:  data.raw_scores['Q3']  ?? null,
     q4:  data.raw_scores['Q4']  ?? null,
