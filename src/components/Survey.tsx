@@ -1,20 +1,19 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react'
-import { surveySteps, totalQuestions, type Question } from '@/data/questions'
+import { type SurveyStep, type Question, getTotalQuestions } from '@/data/questions'
 
 interface SurveyProps {
+  steps: SurveyStep[]
   onComplete: (answers: Record<string, number>) => void
 }
 
 function LikertQuestion({
-  question, value, note, onChange, onNote, index,
+  question, value, onChange, index,
 }: {
   question: Question
   value: number | undefined
-  note: string
   onChange: (v: number) => void
-  onNote: (n: string) => void
   index: number
 }) {
   const anchors: Record<number, string | undefined> = {
@@ -24,92 +23,89 @@ function LikertQuestion({
   }
 
   return (
-    <div className="bg-card rounded-xl border p-6 space-y-6">
-
+    <div className="bg-card rounded-xl border p-6 space-y-5">
       <p className="text-base font-semibold text-foreground leading-snug">
         <span className="text-primary font-bold mr-2">{index + 1}.</span>
         {question.text}
       </p>
 
-      {/* Buttons + labels — always visible on all screen sizes */}
-      <div className="grid grid-cols-5 gap-2">
+      {/* Desktop-first Likert — all 5 columns visible with comfortable spacing */}
+      <div className="grid grid-cols-5 gap-3">
         {[1, 2, 3, 4, 5].map(n => {
           const isSelected = value === n
-          const anchorText = anchors[n]
           return (
-            <div key={n} className="flex flex-col items-center gap-2">
-              <button
-                type="button"
-                onClick={() => onChange(n)}
-                className={`w-full h-13 rounded-xl border-2 font-extrabold text-lg transition-all py-3 ${
-                  isSelected
-                    ? 'border-primary bg-primary text-primary-foreground shadow-md scale-105'
-                    : 'border-border bg-card text-foreground hover:border-primary/50 hover:bg-primary/5'
-                }`}
-              >
-                {n}
-              </button>
-              {anchorText ? (
-                <p className={`text-[8px] font-medium text-foreground leading-tight w-full ${
-                  n === 1 ? 'text-left' : n === 5 ? 'text-right' : 'text-center'
-                }`}>
-                  {anchorText}
-                </p>
-              ) : null}
-            </div>
+            <button
+              key={n}
+              type="button"
+              onClick={() => onChange(n)}
+              className={`h-16 rounded-xl border-2 font-extrabold text-xl transition-all ${
+                isSelected
+                  ? 'border-primary bg-primary text-primary-foreground shadow-md scale-105'
+                  : 'border-border bg-card text-foreground hover:border-primary/50 hover:bg-primary/5'
+              }`}
+            >
+              {n}
+            </button>
           )
         })}
       </div>
 
-      {/* Optional note for scores 2 and 4 */}
-      {(value === 2 || value === 4) && (
-        <div>
-          <label className="text-xs font-semibold text-foreground block mb-2">
-            Optional: describe your situation
-          </label>
-          <textarea
-            value={note}
-            onChange={e => onNote(e.target.value)}
-            placeholder="What best describes where you are between these two options?"
-            rows={2}
-            className="w-full text-sm rounded-lg border bg-background px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
-          />
+      {/* Anchor labels — 3 anchors under columns 1, 3, 5 */}
+      <div className="grid grid-cols-5 gap-3">
+        <div className="col-span-1">
+          <p className="text-xs text-muted-foreground leading-snug text-left">{anchors[1]}</p>
         </div>
-      )}
+        <div className="col-span-1" />
+        <div className="col-span-1">
+          <p className="text-xs text-muted-foreground leading-snug text-center">{anchors[3]}</p>
+        </div>
+        <div className="col-span-1" />
+        <div className="col-span-1">
+          <p className="text-xs text-muted-foreground leading-snug text-right">{anchors[5]}</p>
+        </div>
+      </div>
     </div>
   )
 }
 
-export default function Survey({ onComplete }: SurveyProps) {
+export default function Survey({ steps, onComplete }: SurveyProps) {
   const [step, setStep] = useState(0)
   const [answers, setAnswers] = useState<Record<string, number>>({})
-  const [notes, setNotes] = useState<Record<string, string>>({})
+  const totalQuestions = getTotalQuestions(steps)
+  const currentStep = steps[step]
+  const allAnsweredInStep = currentStep.questions.every(q => answers[q.id] !== undefined)
+  const answeredCount = Object.keys(answers).length
+  const progress = Math.round((answeredCount / totalQuestions) * 100)
 
-  const currentStep = surveySteps[step]
-  const answeredInStep = currentStep.questions.filter(q => answers[q.id] !== undefined).length
-  const stepComplete = answeredInStep === currentStep.questions.length
-  const isLastStep = step === surveySteps.length - 1
-  const totalAnswered = Object.keys(answers).length
-  const progress = Math.round((totalAnswered / totalQuestions) * 100)
-  const questionOffset = surveySteps.slice(0, step).reduce((s, st) => s + st.questions.length, 0)
-
-  function handleNext() {
-    if (!stepComplete) return
-    if (isLastStep) { onComplete(answers) }
-    else { setStep(s => s + 1); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  function setAnswer(id: string, value: number) {
+    setAnswers(prev => ({ ...prev, [id]: value }))
   }
 
-  function handleBack() {
-    if (step > 0) { setStep(s => s - 1); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  function next() {
+    if (!allAnsweredInStep) return
+    if (step < steps.length - 1) {
+      setStep(step + 1)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      onComplete(answers)
+    }
   }
+
+  function back() {
+    if (step > 0) {
+      setStep(step - 1)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
+  const remainingInStep = currentStep.questions.filter(q => answers[q.id] === undefined).length
 
   return (
     <div className="space-y-6">
-
-      {/* Progress */}
+      {/* Progress bar */}
       <div className="bg-card rounded-lg border p-4 space-y-3">
         <div className="flex justify-between text-sm font-medium text-foreground">
-          <span>{totalAnswered} of {totalQuestions} answered</span>
+          <span>{answeredCount} of {totalQuestions} answered</span>
           <span>{progress}%</span>
         </div>
         <div className="w-full h-2 bg-border rounded-full overflow-hidden">
@@ -119,7 +115,7 @@ export default function Survey({ onComplete }: SurveyProps) {
           />
         </div>
         <div className="flex gap-2">
-          {surveySteps.map((s, i) => (
+          {steps.map((s, i) => (
             <div key={i} className="flex-1">
               <div className={`h-1 rounded-full transition-colors ${
                 i < step ? 'bg-primary' : i === step ? 'bg-primary/50' : 'bg-border'
@@ -132,7 +128,7 @@ export default function Survey({ onComplete }: SurveyProps) {
         </div>
       </div>
 
-      {/* Questions */}
+      {/* Step header */}
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
@@ -143,20 +139,22 @@ export default function Survey({ onComplete }: SurveyProps) {
           className="space-y-4"
         >
           <div>
-            <h2 className="text-xl font-bold text-foreground">{currentStep.title}</h2>
-            <p className="text-sm text-muted-foreground mt-0.5">{currentStep.subtitle}</p>
+            <p className="text-sm text-muted-foreground">{currentStep.subtitle}</p>
+            <h2 className="text-xl font-bold text-foreground mt-0.5">{currentStep.title}</h2>
           </div>
-          {currentStep.questions.map((q, i) => (
-            <LikertQuestion
-              key={q.id}
-              question={q}
-              value={answers[q.id]}
-              note={notes[q.id] ?? ''}
-              onChange={v => setAnswers(prev => ({ ...prev, [q.id]: v }))}
-              onNote={n => setNotes(prev => ({ ...prev, [q.id]: n }))}
-              index={questionOffset + i}
-            />
-          ))}
+
+          {currentStep.questions.map((q, idx) => {
+            const globalIdx = steps.slice(0, step).reduce((sum, s) => sum + s.questions.length, 0) + idx
+            return (
+              <LikertQuestion
+                key={q.id}
+                question={q}
+                value={answers[q.id]}
+                onChange={v => setAnswer(q.id, v)}
+                index={globalIdx}
+              />
+            )
+          })}
         </motion.div>
       </AnimatePresence>
 
@@ -164,30 +162,27 @@ export default function Survey({ onComplete }: SurveyProps) {
       <div className="flex items-center justify-between pt-2 border-t border-border">
         {step > 0 ? (
           <button
-            onClick={handleBack}
+            onClick={back}
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-primary transition-colors"
           >
             <ArrowLeft className="w-4 h-4" /> Back
           </button>
-        ) : (
-          <div />
-        )}
+        ) : <div />}
+
         <div className="flex items-center gap-3">
-          {stepComplete ? (
-            <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600">
-              <CheckCircle2 className="w-3.5 h-3.5" /> All answered
-            </span>
+          {remainingInStep > 0 ? (
+            <span className="text-xs text-muted-foreground">{remainingInStep} remaining</span>
           ) : (
-            <span className="text-xs text-muted-foreground">
-              {currentStep.questions.length - answeredInStep} remaining
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-success">
+              <CheckCircle2 className="w-3.5 h-3.5" /> All answered
             </span>
           )}
           <button
-            onClick={handleNext}
-            disabled={!stepComplete}
+            onClick={next}
+            disabled={!allAnsweredInStep}
             className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-bold disabled:opacity-40 hover:opacity-90 transition-all"
           >
-            {isLastStep ? 'See my results' : 'Next section'}
+            {step === steps.length - 1 ? 'See my results' : 'Next section'}
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>

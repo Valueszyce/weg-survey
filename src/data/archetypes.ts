@@ -71,7 +71,8 @@ export const levelDescriptions: Record<string, Record<string, string>> = {
   },
 };
 
-export const improvements: Record<string, Record<string, string[]>> = {
+// PS / Software Development improvements (tailored for services firms)
+export const improvementsPS: Record<string, Record<string, string[]>> = {
   capabilities: {
     L: [
       "Assign one person — even part-time — to own pricing decisions and outcomes. Without ownership, nothing else sticks.",
@@ -123,13 +124,83 @@ export const improvements: Record<string, Record<string, string[]>> = {
       "Measure win rate by price point and by salesperson. The pattern will tell you where pricing discipline is breaking down and who needs coaching.",
     ],
   },
-};
+}
+
+// SaaS / Product improvements (tailored for software product companies)
+export const improvementsSaaS: Record<string, Record<string, string[]>> = {
+  capabilities: {
+    L: [
+      "Assign one person — even part-time — to own pricing decisions. Without ownership, pricing stays reactive and scattered across Product, Sales, and Finance.",
+      "Audit your last 20 closed deals: what was listed, what was contracted, and where you discounted. The audit alone will surface your biggest revenue leak.",
+      "Pick three numbers to track monthly: average discount rate, net revenue retention (NRR), and expansion revenue as a percentage of total ARR.",
+    ],
+    M: [
+      "Run a monthly pricing review using actual deal data — not targets. Look at discount variance by segment (SMB / Mid / Enterprise) and by sales rep.",
+      "Formalise your discount approval process. Define the threshold above which a discount needs VP or CRO sign-off. Make it visible in your CRM.",
+      "Schedule a recurring Pricing Committee meeting — even 30 minutes monthly — with Product, Finance, and Sales at the table.",
+    ],
+    H: [
+      "Build a pricing experimentation roadmap: one controlled test per quarter on packaging, price points, or discount policy. Measure impact on win rate and ACV.",
+      "Integrate pricing metrics into board reporting. Leadership should see price realisation and NRR alongside revenue and logo growth.",
+      "Establish a cross-functional pricing council (Product, Finance, Sales, Customer Success) that meets quarterly and owns pricing decisions collectively.",
+    ],
+  },
+  setting: {
+    L: [
+      "Stop pricing from costs or competitor benchmarks alone. List the outcomes your product creates — time saved, risk reduced, revenue generated — and anchor your price to those.",
+      "Redesign your pricing metric around the unit of value customers actually care about (usage, outcomes, records processed) — not just seats by default.",
+      "Build a transparent pricing page on your website that shows tiers clearly. Hiding prices filters serious buyers and signals you don't know your own value.",
+    ],
+    M: [
+      "Run five buyer interviews asking what they'd pay for the outcome your product delivers. You'll likely find your price sits 20–40% below market tolerance.",
+      "Introduce value-based packaging: tier your product around outcomes and usage depth, not feature checklists. Good / Better / Best with clear anchors.",
+      "Build a systematic competitor pricing monitor — track changes in their pricing pages and packaging at least quarterly. Document the positioning.",
+    ],
+    H: [
+      "Run a formal willingness-to-pay study (Van Westendorp or conjoint) before your next major pricing change. Let data, not gut, drive the decision.",
+      "Introduce usage-based or hybrid pricing elements to capture more value from power users without raising the entry price for new customers.",
+      "Formalise a pricing change management process: impact modelling, rollout sequencing, grandfathering rules, and customer communication playbooks for every price move.",
+    ],
+  },
+  execution: {
+    L: [
+      "Set a maximum discount threshold any rep can offer without escalation. Write it down, share it with the team, and enforce it on the next deal.",
+      "For every discounted deal, log: who asked, why, how much, and what you got in return. The act of logging alone changes sales behaviour.",
+      "Equip sales with ROI calculators and quantified customer case studies so they can defend value instead of defaulting to price cuts.",
+    ],
+    M: [
+      "Build a discount recovery process: identify all customers on legacy discounted rates and run structured price-increase conversations at renewal.",
+      "Track expansion revenue (upsell, cross-sell, upgrades) as a separate KPI. If you can't see it in a dashboard, you can't grow it.",
+      "Create a negotiation playbook with clear moves: shorter contract term, phased rollout, added services — so reps have levers other than lower price.",
+    ],
+    H: [
+      "Automate discount guardrails in your CRM or CPQ so out-of-policy deals are flagged before they reach the customer.",
+      "Make contract renewal the trigger for a price review. Build in CPI adjustments and usage-based escalators from day one of every contract.",
+      "Benchmark price realisation by rep, segment, and deal size. The patterns tell you exactly where discipline is breaking down and who needs coaching.",
+    ],
+  },
+}
+
+// Helper: returns the right improvements set based on company type
+export function getImprovements(companyType?: string | null): Record<string, Record<string, string[]>> {
+  if (companyType === 'SoftwareDevelopment') return improvementsPS
+  return improvementsSaaS // SaaS and Other default to SaaS set
+}
+
+// Backwards compatibility — default export points to SaaS set
+export const improvements = improvementsSaaS
 
 const SECTION_MAP: Record<string, 'capabilities' | 'setting' | 'execution'> = {
+  // Software Development set
   Q2:  'setting',
   Q3:  'setting',
   Q8:  'setting',
   Q12: 'execution',
+  // SaaS set
+  Q4:  'setting',
+  Q11: 'setting',
+  Q17: 'execution',
+  // Shared
   Q15: 'execution',
   Q23: 'execution',
   Q27: 'capabilities',

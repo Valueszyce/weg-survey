@@ -1,7 +1,7 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { TrendingUp, Target, Shield, ArrowLeft, ArrowRight } from "lucide-react";
-import { getArchetype, dimensionLabels, dimensionDescriptions, levelDescriptions, improvements } from "@/data/archetypes";
+import { getArchetype, dimensionLabels, dimensionDescriptions, levelDescriptions, getImprovements } from "@/data/archetypes";
 import logo from "@/assets/valueships-logo.png";
 import { useRef } from "react";
 
@@ -24,7 +24,10 @@ const fadeIn = {
 
 const Result = () => {
   const { code } = useParams<{ code: string }>();
+  const [searchParams] = useSearchParams();
+  const companyType = searchParams.get("type");
   const archetype = getArchetype(code || "");
+  const improvements = getImprovements(companyType);
   const contentRef = useRef<HTMLDivElement>(null);
 
   if (!archetype) {
