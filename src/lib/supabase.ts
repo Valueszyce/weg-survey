@@ -15,7 +15,9 @@ export async function saveResponse(data: {
   exe_letter: string
   raw_scores: Record<string, number>
 }) {
-  const { error } = await supabase.from('responses').insert([{
+  // Cast to any: DB has new columns (company_name, company_type, q4, q11, q17)
+  // not yet reflected in the auto-generated Supabase types.
+  const payload: any = {
     email: data.email,
     first_name: data.first_name,
     company_name: data.company_name,
@@ -41,6 +43,7 @@ export async function saveResponse(data: {
     q27: data.raw_scores['Q27'] ?? null,
     q28: data.raw_scores['Q28'] ?? null,
     q29: data.raw_scores['Q29'] ?? null,
-  }])
+  }
+  const { error } = await supabase.from('responses').insert([payload])
   if (error) throw error
 }
