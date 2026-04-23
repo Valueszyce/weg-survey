@@ -60,7 +60,7 @@ export default function Index() {
             </p>
 
             <p className="text-foreground text-base leading-relaxed mb-6">
-              Take the assessment to diagnose your <strong>pricing strengths and gaps</strong>, then get a <strong>practical set of next steps</strong> based on a proven pricing framework — brought to you for all <strong>CEE Growth Platform members</strong>.
+              Take the assessment to diagnose your <strong>pricing strengths and gaps</strong>, then get a <strong>practical set of next steps</strong> based on a proven pricing framework — brought for all <strong className="whitespace-nowrap">CEE Growth Platform members</strong>.
             </p>
 
             <div className="bg-accent/30 rounded-lg p-5 mb-6">
