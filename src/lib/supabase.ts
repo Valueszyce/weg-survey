@@ -1,4 +1,4 @@
-import { supabase } from '@/integrations/supabase/client'
+import { supabase } from '@/lib/supabaseClient'
 import type { CompanyType } from '@/data/questions'
 
 export async function saveResponse(data: {
